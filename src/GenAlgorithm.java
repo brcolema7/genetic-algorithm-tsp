@@ -27,7 +27,7 @@ public class GenAlgorithm {
 		this.individualSize = numCities;
 		this.numCities = numCities;
 		this.crossOverRate = (int) ((generationSize * 0.7));
-		this.maxIterations = 50000;
+		this.maxIterations = 30000;
 		this.mutationRate = (float) 0.4;
 		// this.targetFitness = 7;
 		this.tourneySize = (int) (generationSize * 0.2);
@@ -35,9 +35,9 @@ public class GenAlgorithm {
 		this.selectionType = selectionType;
 
 	}
-	
+
 	// ****************************************************************************
-	
+
 	// SELECTION FUNCTION(S)
 	// ****************************************************************************
 
@@ -62,19 +62,19 @@ public class GenAlgorithm {
 		for (int i = 0; i < crossOverRate; i++) {
 
 			if (selectionType == SelectionType.TOURNAMENT) {
-				
+
 				Individual min = tourneySelection(population);
 				population.remove(min);
 				selected.add(min);
-				
-				//selected.add(tourneySelection(population));
+
+				// selected.add(tourneySelection(population));
 
 			} else if (selectionType == SelectionType.ROULETTE) {
 				selected.add(rouletteSelection(population));
 			}
 
 		}
-		
+
 		return selected;
 	}
 
@@ -138,23 +138,18 @@ public class GenAlgorithm {
 
 	// ****************************************************************************
 	/*
-	// SELECTION TEST METHOD
-	public void bestSelected(List<Individual> population) {
-
-		int a;
-		Individual min = population.get(0);
-
-		for (int i = 1; i < population.size(); i++) {
-			a = population.get(i).getFitness();
-
-			if (a < min.getFitness()) {
-				min = population.get(i);
-			}
-		}
-
-		min.printIndividual();
-	}
-	*/
+	 * // SELECTION TEST METHOD public void bestSelected(List<Individual>
+	 * population) {
+	 * 
+	 * int a; Individual min = population.get(0);
+	 * 
+	 * for (int i = 1; i < population.size(); i++) { a =
+	 * population.get(i).getFitness();
+	 * 
+	 * if (a < min.getFitness()) { min = population.get(i); } }
+	 * 
+	 * min.printIndividual(); }
+	 */
 	// ****************************************************************************
 
 	// CROSSOVER FUNCTION(S)
@@ -166,23 +161,22 @@ public class GenAlgorithm {
 		List<Integer> parent1 = new ArrayList<Integer>(parents.get(0).getIndividual());
 		List<Integer> parent2 = new ArrayList<Integer>(parents.get(1).getIndividual());
 
-		//System.out.println("p1: " + parent1 + "  p2: " + parent2);
+		// System.out.println("p1: " + parent1 + " p2: " + parent2);
 
 		Random r = new Random();
 		int genesCrossed = r.nextInt(individualSize);
-		//System.out.println("break at index: " + genesCrossed);
+		// System.out.println("break at index: " + genesCrossed);
 
 		for (int i = 0; i <= genesCrossed; i++) {
 			int gene;
 			gene = parent2.get(i);
 			Collections.swap(parent1, parent1.indexOf(gene), i);
 		}
-		
-		
+
 		children.add(new Individual(parent1, numCities, map, startCity));
-		//System.out.print("Ch1:");
-		//children.get(0).printIndividual();
-		//System.out.println();
+		// System.out.print("Ch1:");
+		// children.get(0).printIndividual();
+		// System.out.println();
 
 		parent1 = parents.get(0).getIndividual();
 
@@ -193,10 +187,10 @@ public class GenAlgorithm {
 		}
 
 		children.add(new Individual(parent2, numCities, map, startCity));
-		//System.out.print("Ch2:");
-		//children.get(1).printIndividual();
-		//System.out.println();
-		
+		// System.out.print("Ch2:");
+		// children.get(1).printIndividual();
+		// System.out.println();
+
 		return children;
 	}
 
@@ -234,34 +228,33 @@ public class GenAlgorithm {
 			generation.addAll(children);
 			currGenSize += 2;
 			Collections.shuffle(population);
-			
+
 		}
 
 		return generation;
 	}
-	
-	public List<Individual> findElite(List<Individual> pop){
+
+	public List<Individual> findElite(List<Individual> pop) {
 		List<Individual> elite = new ArrayList<>();
-		
-		for(int i=0;i<2;i++) {
+
+		for (int i = 0; i < 2; i++) {
 			Individual min = min(pop);
 			elite.add(min);
 			pop.remove(min);
 		}
-		
+
 		return elite;
 	}
 
 	public void printPopulation(List<Individual> population) {
 		/*
-		System.out.println("------------------------");
-		System.out.println(" Individuals	Fitness");
-		System.out.println("------------------------");
-
-		for (int i = 0; i < population.size(); i++) {
-			population.get(i).printIndividual();
-		}
-		*/
+		 * System.out.println("------------------------");
+		 * System.out.println(" Individuals	Fitness");
+		 * System.out.println("------------------------");
+		 * 
+		 * for (int i = 0; i < population.size(); i++) {
+		 * population.get(i).printIndividual(); }
+		 */
 		Individual elite = min(population);
 		System.out.println("------------------------");
 		System.out.print("Best:");
@@ -289,7 +282,7 @@ public class GenAlgorithm {
 			}
 		}
 
-		//printPopulation(pop);
+		// printPopulation(pop);
 		return pop;
 
 	}
@@ -298,28 +291,26 @@ public class GenAlgorithm {
 	// ****************************************************************************
 
 	public Individual optimize() {
-		
+
 		System.out.println("\n (Initial Population) ");
-		
+
 		List<Individual> population = intialPopulation();
 		printPopulation(population);
-		
+
 		Individual best = population.get(0);
 
 		for (int i = 1; i <= maxIterations; i++) {
 			List<Individual> elite = findElite(population);
 			List<Individual> selected = selection(population);
-			
+
 			/*
-			System.out.println(" (Tourney Selected) ");
-			printPopulation(selected);
-			*/
-			
+			 * System.out.println(" (Tourney Selected) "); printPopulation(selected);
+			 */
+
 			population = createGeneration(selected);
 			population.addAll(elite);
 			Collections.shuffle(population);
-			
-			
+
 			System.out.println("\n (Generation: " + i + ")");
 			printPopulation(population);
 
@@ -328,12 +319,12 @@ public class GenAlgorithm {
 				break;
 			}
 		}
-		
+
 		System.out.println("*************************");
 		System.out.print("Final Path:");
 		best.printIndividual();
 		System.out.println("*************************");
-		
+
 		return best;
 	}
 
